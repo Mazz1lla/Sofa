@@ -6,7 +6,7 @@ from elevenlabs.client import ElevenLabs
 from dotenv import load_dotenv
 
 load_dotenv()
-elevenlabs = ElevenLabs(os.getenv("ELEVENLABS_API_KEY"))
+elevenlabs = ElevenLabs(api_key=(os.getenv("ELEVENLABS_API_KEY")))
 
 app = Flask(__name__)
 
