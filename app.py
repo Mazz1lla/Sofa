@@ -6,7 +6,7 @@ from elevenlabs.client import ElevenLabs
 from dotenv import load_dotenv
 
 load_dotenv()
-elevenlabs = ElevenLabs(api_key=(os.getenv("ELEVENLABS_API_KEY")))
+elevenlabs = ElevenLabs(api_key="sk_bfd1f0a7fd00b141d4de3e3fcaee23432102ac45094ca11c")
 
 print("Ключ:", api_key)
 
