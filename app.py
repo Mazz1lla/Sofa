@@ -43,6 +43,12 @@ def background():
     text = data.get("text", "")
     duration = data.get("duration_seconds", None)
 
+    payload = {
+        "text": text,
+    }
+    if duration is not None:
+        payload["duration_seconds"] = duration
+
     try:
         response = requests.post(
             "https://api.elevenlabs.io/v1/sound-generation",
@@ -50,19 +56,30 @@ def background():
                 "xi-api-key": os.getenv("ELEVENLABS_API_KEY"),
                 "Content-Type": "application/json"
             },
-            json={
-                "text": text,
-                "duration_seconds": duration
-            }
+            json=payload
         )
         response.raise_for_status()
+        result = response.json()
 
-        return send_file(
-            io.BytesIO(response.content),
-            mimetype="audio/mpeg",
-            as_attachment=True,
-            download_name="background.mp3"
+        # Вернём task_id клиенту для дальнейшего ожидания
+        return jsonify({
+            "task_id": result.get("task_id")
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/background/status/<task_id>")
+def background_status(task_id):
+    try:
+        response = requests.get(
+            f"https://api.elevenlabs.io/v1/sound-effects/task/{task_id}",
+            headers={"xi-api-key": os.getenv("ELEVENLABS_API_KEY")}
         )
+        response.raise_for_status()
+        data = response.json()
+        return jsonify(data)
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
