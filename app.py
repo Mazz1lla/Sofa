@@ -6,7 +6,7 @@ from elevenlabs.client import ElevenLabs
 from dotenv import load_dotenv
 
 load_dotenv()
-set_api_key(os.getenv("ELEVENLABS_API_KEY"))
+elevenlabs = ElevenLabs(os.getenv("ELEVENLABS_API_KEY"))
 
 app = Flask(__name__)
 
@@ -21,10 +21,11 @@ def tts():
     voice_id = data.get("voice_id", "Rachel")
 
     try:
-        audio = generate(
+        audio = elevenlabs.text_to_speech.convert(
             text=text,
-            voice=voice_id,
-            model="eleven_multilingual_v2"
+            voice_id=voice_id,
+            model_id="eleven_flash_v2_5",
+            output_format="mp3_44100_128",
         )
 
         return send_file(
