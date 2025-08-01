@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 load_dotenv()
 elevenlabs = ElevenLabs(api_key=(os.getenv("ELEVENLABS_API_KEY")))
 
+print("Ключ:", api_key)
+
 app = Flask(__name__)
 
 @app.route("/")
